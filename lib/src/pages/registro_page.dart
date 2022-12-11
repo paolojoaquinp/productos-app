@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/providers/usuario_provider.dart';
-
 import 'package:formvalidation/src/utils/utils.dart';
 
-class LoginPage extends StatelessWidget {
+class RegistroPage extends StatelessWidget {
   final usuarioProvider = new UsuarioProvider();
 
   @override
@@ -46,7 +45,7 @@ class LoginPage extends StatelessWidget {
             ),
             child: Column(
               children: <Widget>[
-                Text('Ingreso'),
+                Text('Crear cuenta'),
                 SizedBox(height: 60.0),
                 _crearEmail(bloc),
                 SizedBox(height: 30.0),
@@ -56,7 +55,7 @@ class LoginPage extends StatelessWidget {
               ],
             ),
           ),
-          _flatButton(context, 'Olvido la contraseña?'),
+          _flatButton(context, 'Ya tienes cuenta? Login'),
           SizedBox(height: 100.0,)
         ],
       ),
@@ -72,7 +71,7 @@ class LoginPage extends StatelessWidget {
     );
     return TextButton(
       style: flatButtonStyle,
-      onPressed: () => Navigator.pushReplacementNamed(context, 'registro'),
+      onPressed: () => Navigator.pushReplacementNamed(context, 'login'),
       child: Text(texto),
     );
   }
@@ -170,19 +169,20 @@ class LoginPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 80.0,vertical: 15.0),
             child: Text('Ingresar'),
           ),
-          onPressed: (snapshot.hasData) ? () => _login(bloc,context) : null,
+          onPressed: (snapshot.hasData) ? () => _register(bloc,context) : null,
           /* onPressed */
         ); 
       }
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) async {
-    Map info = await usuarioProvider.login(bloc.email, bloc.password);
+  _register(LoginBloc bloc, BuildContext context) async  {
+    final info =  await usuarioProvider.nuevoUsuario(bloc.email, bloc.password);
+
     if(info['ok']) {
       Navigator.pushReplacementNamed(context, 'home');
     } else {
-      mostrarAlerta(context, info['message'].toString());
+      mostrarAlerta(context, info['mensaje']);
     }
   }
 
